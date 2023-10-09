@@ -14,8 +14,10 @@ void main() {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final initializationSettingsAndroid =
   AndroidInitializationSettings('@mipmap/ic_launcher');
+  final initializationSettingsIOS = DarwinInitializationSettings();
   final initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
   );
   flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
@@ -70,9 +72,9 @@ class _LoginPageState extends State<LoginPage> {
 
       if (messageFromApi == 'OK') {
         final prefs = await SharedPreferences.getInstance();
-        prefs.setBool('isLoggedIn', true); // Marquez l'utilisateur comme connecté
-        prefs.setString('decodedUrl', decodedUrl); // Enregistrez le decodedUrl
-        prefs.setString('email', emailController.text); // Enregistrez l'e-mail
+        prefs.setBool('isLoggedIn', true);
+        prefs.setString('decodedUrl', decodedUrl);
+        prefs.setString('email', emailController.text);
         navigateToWebView(decodedUrl, emailController.text);
       } else {
         setState(() {
@@ -210,8 +212,10 @@ class _WebViewPageState extends State<WebViewPage> {
         priority: Priority.high,
         showWhen: false,
       );
+      const iOSPlatformChannelSpecifics = DarwinNotificationDetails(); // Ajoutez cette ligne
       const platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics, // Ajoutez cette ligne
       );
 
       await flutterLocalNotificationsPlugin.show(
